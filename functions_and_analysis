@@ -1,0 +1,469 @@
+dados <- read.csv("http://vision.ime.usp.br/~hirata/MAC0113-2022/Steel_industry_data.csv", header = TRUE, sep = ",")
+str(dados)
+testeFuncao <-0
+
+#                             Criação das Funções
+
+#Nome da Função: contaColuna
+#Objetivo da Função: identificar a quantidade de ocorrências de determinado rótulo no Data Frame.
+
+contaColuna <- function(M,C,R) {
+  dataFrame <- M
+  coluna <- dataFrame[,C]
+  rotulo <- R
+  contagem <- 0
+  for (i in coluna) {
+    if (i == rotulo){
+      contagem <- contagem + 1
+    }
+  }
+  return(contagem)
+}
+
+#Teste da função contaColuna
+testeFuncao <- as.integer(readline("Deseja testar a função contaColuna (com os dados do EP)? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- contaColuna(dados,11,"Medium_Load")
+  print(teste)
+}
+
+
+#Nome da Função: mediaColuna
+#Objetivo: Retornar ao usuário a média dos valores de determinado data frame, em determinada coluna
+
+mediaColuna <- function(M,C) {
+  dataFrame <- M
+  coluna <- dataFrame[,C]
+  soma <- 0
+  media <- 0
+  tamanhoColuna <- length(coluna)
+  i <- 1
+  while (i+1 <= tamanhoColuna) {
+    soma <- soma + coluna[i]
+    i <- i+1
+  }
+  media <- soma / tamanhoColuna
+  return(media)
+}
+
+#Teste da função mediaColuna
+testeFuncao <- as.integer(readline("Deseja testar a função mediaColuna(com os dados do EP)? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- mediaColuna(dados, 2)
+  print(teste)
+}
+
+
+#Nome da Função: medianaColuna
+#Objetivo da Função: Identificar a mediana de uma coluna
+
+medianaColuna <- function(M,C) {
+  dataFrame <- M
+  coluna <- dataFrame[,C]
+  V <- c()
+  mediana <- 0
+  m <- 0
+  for (i in coluna) {
+    V <- c(V,i)
+  }
+  for (i in length(V):2) {
+    for (g in 1:(i-1)) {
+      if (V[g] > V[g+1]) {
+        aux <- V[g]
+        V[g] <- V[g+1]
+        V[g+1] <- aux
+      }
+    }
+  }
+  if (length(V) %% 2 == 0) {
+    m <- length(V) / 2
+    mediana <- (V[m] + V[m+1]) / 2
+  } else if (length(V) %% 2 != 0) {
+    m <- (length(V) + 1) / 2
+    mediana <- V[m]
+  }
+  return(mediana)
+}
+
+#Teste da função medianaColuna
+testeFuncao <- as.integer(readline("Deseja testar a função medianaColuna(com os dados do EP)? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- medianaColuna(dados,2)
+  print(teste)
+}
+
+
+#Nome da Função: varColuna
+#Objetivo da Função: Determinar a variância de uma coluna
+
+varColuna <- function(M,C) {
+  dataFrame <- M
+  coluna <- dataFrame[,C]
+  #Calculo da média
+  soma <- 0
+  media <- 0
+  tamanhoColuna <- length(coluna)
+  i <- 1
+  while (i+1 <= tamanhoColuna) {
+    soma <- soma + coluna[i]
+    i <- i+1
+  }
+  media <- soma / tamanhoColuna
+  #Calculo da Variância
+  variancia <- 0
+  for (i in coluna) {
+    variancia <- variancia + ((media - i)^2)
+  }
+  variancia <- variancia / (tamanhoColuna - 1)
+  return(variancia)
+}
+
+#Teste da função varColuna
+testeFuncao <- as.integer(readline("Deseja testar a função varColuna(com os dados do EP)? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- varColuna(dados,2)
+  print(teste)
+}
+  
+
+#Nome da Função: mediaColunaAgrupada
+#Objetivo: dado um data frame, duas colunas e um rótulo, calcula a média
+
+mediaColunaAgrupada <- function(M,C1,C2,R) {
+  dataFrame <- M
+  coluna1 <- dataFrame[,C1]
+  coluna2 <- dataFrame[,C2]
+  rotulo <- R
+  soma <- 0
+  ocorrencia <- 0
+  g <- 0
+  for (i in coluna2) {
+    g <- g+1
+    if (i == rotulo) {
+      soma <- soma + coluna1[g]
+      ocorrencia <- ocorrencia + 1
+    }
+  }
+  mediaColunaAgrupada <-  soma / ocorrencia
+  return(mediaColunaAgrupada)
+}
+
+#Teste da função mediaColunaAgrupada
+testeFuncao <-0
+
+testeFuncao <- as.integer(readline("Deseja testar a função mediaColunaAgrupada(com os dados do EP)? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- mediaColunaAgrupada(dados,2,10,"Tuesday")
+  print(teste)
+}
+
+
+#Nome da Função: varColunaAgrupada
+#Objetivo da Função: Determinar a variância de determinada coluna de certo rótulo
+
+varColunaAgrupada <- function(M,C1,C2,R) {
+  df <- M
+  colunaNum <- df[,C1]
+  colunaRotu <- df[,C2]
+  rotulo <- R
+  soma <- 0
+  ocorrencia <- 0
+  g <- 0
+  V <- c()
+  mediaColunaAgrupada <-
+    for (i in colunaRotu) {
+      g <- g + 1
+      if (i == rotulo) {
+        soma <- soma + colunaNum[g]
+        V <- c(V,colunaNum[g])
+        ocorrencia <- ocorrencia + 1
+      }
+    }
+  mediaColunaAgrupada <- soma / ocorrencia
+  variancia <- 0
+  for (g in V) {
+    variancia <- variancia + ((mediaColunaAgrupada - g)^2)
+  }
+  varColunaAgrupada <- (variancia / (ocorrencia - 1))
+  return(varColunaAgrupada)
+}
+
+#Teste da função varColunaAgrupada
+testeFuncao <- as.integer(readline("Deseja testar a função varColunaAgrupada(com os dados do EP)? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- varColunaAgrupada(dados,2,10,"Sunday")
+  print(teste)
+}
+
+
+#Nome da Função: extraiColuna
+#Objetivo da Função: Extrair uma coluna para um vetor
+
+extraiColuna <- function(M,C) {
+  df <- M
+  V <- c()
+  for (i in df[,C]) {
+    V <- c(V,i)
+  }
+  return(V)
+}
+
+#Teste da Função extraiColuna
+testeFuncao <- as.integer(readline("Deseja testar a função extraiColuna? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- extraiColuna(dados,2)
+  print(teste)
+}
+
+
+#Nome da Função: extraiColunaMensal
+#Objetivo da Função: Extrair parte de uma coluna, de acordo com seu mês, para um vetor
+extraiColunaMensal <- function(M,C,mes) {
+  df <- M
+  coluna <- df[,C]
+  data <- df[,1]
+  mes <- mes
+  V <- c()
+  g <- 0
+  for (i in data) {
+    g <- g + 1
+    if (substring(i,4,5) == mes) {
+      V <- c(V,coluna[g])
+    }
+  }
+  return(V)
+}
+
+#Teste função extraiColunaMensal
+testeFuncao <- as.integer(readline("Deseja testar a função extraiColunaMensal (mês de janeiro)? Digite 1 se sim, 0 se não: "))
+if (testeFuncao == 1){
+  teste <- extraiColunaMensal(dados,2,"01")
+  print(teste)
+}
+
+#                             Outras Funções Utilizadas
+
+#Nome da Função: mediaVetor
+#Objetivo da Função: Encontrar a média de determinado vetor
+mediaVetor <- function(V) {
+  soma <- 0
+  for (i in V) {
+    soma <- soma + i
+  }
+  mediaVetor <- soma / length(V)
+}
+somaVetor <- function(V) {
+  somaVetor <- 0
+  for (i in V) {
+    somaVetor <- somaVetor + i
+  }
+  return(somaVetor)
+}
+
+#Nome da Função: desvioColuna
+#Objetivo: Calcula o desvio de determinada coluna
+desvioColuna <- function(M,C) {
+  df <- M
+  coluna <- df[,C]
+  soma <- 0
+  mediaVetor <- 0
+  for (i in coluna) {
+    soma <- soma + i
+  }
+  mediaVetor <- soma / length(coluna)
+  Desvio <- c()
+  for (g in coluna) {
+    Desvio <- c(Desvio, ((g - mediaVetor)^2))
+  }
+  return(Desvio)
+}
+
+##                              Gráficos
+
+#1 - Gasto Médio Mensal
+
+#Construção da Lógica
+mediaMensal <- 0
+Medias <- c()
+Meses <- c()
+#Colocando as médias mensais em um vetor
+x <- 1
+while (x <= 12) {
+  x <- sprintf("%02d",x)
+  x <- as.character(x)
+  mediaMensal <- extraiColunaMensal(dados,2,x)
+  mediaMensal <- mediaVetor(mediaMensal)
+  Medias <- c(Medias,mediaMensal)
+  x <- as.numeric(x)
+  x <- x + 1
+}
+Meses <- c(1:12)
+mediaAnual <- 0
+mediaAnual <- mediaColuna(dados,2)
+cat("As médias por mês são: ",Medias,"\n")
+
+#Criação do gráfico
+plot(Meses, Medias, xlab = "Meses do ano de 2018", ylab = "kWh", main = "Gasto energético médio mensal",
+     las = 1, xaxp = c(0,12,12), yaxp = c(0,45,9), bty = "n", pch = 16, col = "blue",
+     type = "b")
+abline(h = 27.38, col = "red", lty = 2)
+legend(x = "topright", legend = "Média anual", lty = 2, col = "red", bty = "n", lwd = 1.5)
+
+#Explicando:
+# O gráfico apresentado, demonstra o gasto energético médio mensal em kWh, e compara
+#com a média anual. Essa vizualização é importante, pois evidencia em quais meses o consumo
+#de energia foi maior, consequentemente, onde a produção das peças de aço superou 
+#a média anual. Nesse caso, os anos de maior gasto energético foram em janeiro, fevereiro,
+#Outubro e Novembro.
+
+
+#2 - Gasto médio por dias da semana
+
+#Construção da Lógica
+mediaDiaSemana <- 0
+V <- c()
+mediaDiaSemana <- mediaColunaAgrupada(dados,2,10,"Sunday")
+V <- c(V,mediaDiaSemana)
+mediaDiaSemana <- mediaColunaAgrupada(dados,2,10,"Monday")
+V <- c(V,mediaDiaSemana)
+mediaDiaSemana <- mediaColunaAgrupada(dados,2,10,"Tuesday")
+V <- c(V,mediaDiaSemana)
+mediaDiaSemana <- mediaColunaAgrupada(dados,2,10,"Wednesday")
+V <- c(V,mediaDiaSemana)
+mediaDiaSemana <- mediaColunaAgrupada(dados,2,10,"Thursday")
+V <- c(V,mediaDiaSemana)
+mediaDiaSemana <- mediaColunaAgrupada(dados,2,10,"Friday")
+V <- c(V,mediaDiaSemana)
+mediaDiaSemana <- mediaColunaAgrupada(dados,2,10,"Saturday")
+V <- c(V,mediaDiaSemana)
+cat("As médias por dia da semana são: ",V,"\n")
+
+#Construção do Gráfico
+barplot(height = V, names.arg = c("Dom","Seg","Ter","Qua","Qui","Sex","Sab"),
+        ylab = "Média de gasto energético (em kWh)",
+        main = "Gasto médio por dia da semana", cex.names = 1, col = "lightblue")
+
+#Explicando:
+# O gráfico em questão, demonstra a média de gasto energético por dias da semana
+#conseguindo evidenciar em quais dias são mais produtivos que outro. Nesse caso,
+#fica evidente que os dias de maior operação (os da semana), o sábado,onde a produção
+#é menor, e o domingo que, aparentemente, os gastos são apenas para a manutenção 
+#da fábrica.
+
+
+#3 - Quantidade de vezes em que a capacidade mínima, média e máxima é atingida.
+
+#Construção da Lógica
+V <- c()
+capacidade <- contaColuna(dados,11,"Light_Load")
+V <- c(V,capacidade)
+capacidade <- contaColuna(dados,11,"Medium_Load")
+V <- c(V,capacidade)
+capacidade <- contaColuna(dados,11,"Maximum_Load")
+V <- c(V,capacidade)
+cat("As vezes em que as capacidades mín, med e max foram atingidas foram", V,",respectivamente.\n")
+#Construção do Gráfico
+barplot(height = V, names.arg = c("Mínima","Média","Máxima"),
+        ylab = "Frequência", xlab = "Capacidade",
+        main = "Vezes em que as capacidades mínima, 
+        média e máxima é atingida", cex.names = 1, col = "lightblue", las = 1, yaxp = c(0,20000,4),
+        cex.axis = 0.7)
+
+#Explicando:
+# O gráfico em questão, demonstra a quantidadde de vezes em que as capacidades mínimas,
+#médias e maxímas são atingidas. É importante, pois consegue mostrar a quantidade de
+#vezes em que a capacidade máxima é atingida, e consequentemente, a produção está
+#no limite.
+
+
+#4 - Produção de CO2 produzido por kWh
+
+#Construção da Lógica
+CO2 <- c()
+CO2 <- extraiColuna(dados,5)
+somaCO2 <- somaVetor(CO2)
+cat("A produção anual de CO2 pela empresa foi de: ",somaCO2,"\n")
+cat("Alguns dados da produção de CO2: \n")
+print(summary(CO2))
+
+#Construção do Gráfico
+plot(dados$Usage_kWh,CO2, main = "Produção de CO2 produzido 
+     por kWh gasto", ylab = "CO2 (em ppm)", xlab = "Energia Consumida (em kWh)",
+     las = 1, bty = "n", pch = 21, col = "red3", cex = 0.6,)
+legend(x = "topleft", legend = "Produção anual (em ppm): 403.81", cex = 0.7, bty = "n")
+
+# Explicando:
+# O gráfico em questão, demonstra a produção de CO2, em partes por milhão, de acordo
+#com a energia consumida, em kWh, além de informar a produção total anual de CO2.
+#Ela é importante, pois a partir desse gráfico, a empresa poderá vizualizar o impacto 
+#ambiental que a empresa causa, e calcular medidas para a reparação do meio ambiente.
+
+
+#5 - Comparação entre a desvios do gasto energético e sua variância
+
+#Construção da lógica
+Desvio <- 0
+variancia <- 0
+Desvio <- desvioColuna(dados,2)
+variancia <- varColuna(dados,2)
+cat("A variância do gasto energético é de: ",variancia,"\n")
+cat("Alguns dados dos desvios do gasto energético: \n")
+print(summary(Desvio))
+contagem <- 0
+for (i in Desvio) {
+  if (i > variancia) {
+    contagem <- contagem + 1
+  }
+}
+cat("As vezes em que o desvio do gasto energético ultrapassou sua variância foi de: ",contagem,"vezes\n")
+
+#Construção do Gráfico
+barplot(Desvio, xlab = "Ano de 2018", ylab = "Desvio do gasto energético",
+        main = "Comparação entre desvio e variância
+        do gasto energético",
+        las = 1, yaxp = c(0,20000,4),
+        cex.axis = 0.7)
+legend(x = "top", legend = "Variância", cex = 0.7, bty = "n",
+       lty = 2, col = "red")
+abline(h = 1118.527, lty = 2, col = "red")
+
+#Explicando:
+# O gráfico em questão, demonstra os desvios do gasto energético, que é, a dispersão
+#do gasto energético em relação ao seu gasto médio anual. Além disso, evidência a
+#variância, que é o desvio quadrático médio, e contabiliza a quantidade de vezes
+#em que esse desvio ultrapassou sua variância. É importante, pois através desses dados
+#é possivel vizualizar as variações do gasto energético e comparar com os gasto médio
+#suportado do aparelho, caso os picos sejam maiores do que os suportados, efetuar troca.
+
+
+#6 - Quantidade de potência reativa, indutiva e capacitativa, no sistema durante o ano
+
+#Construção da lógica
+V <- c()
+G <- c()
+soma <- 0
+V <- extraiColuna(dados,3)
+soma <- somaVetor(V)
+G <- c(G,soma)
+V <- extraiColuna(dados,4)
+soma <- somaVetor(V)
+G <- c(G,soma)
+cat("A quantidade de potência reativa indutiva e capacitativa no sistema é de : ",G,"\n")
+soma <- somaVetor(G)
+cat("A soma das potências reativas no sistema é de: ",soma,"kVarh.\n")
+
+#Construção do Gráfico
+barplot(height = G, names.arg = c("Indutiva","Capacitada"),
+        ylab = "Qtde. de Potência reativa (em kVarh)", xlab = "Soma anual",
+        main = "Quantidade de Potência reativa 
+        no sistema", cex.names = 1, col = "lightblue", las = 1, yaxp = c(0,500000,4),
+        cex.axis = 0.7)
+
+#Explicando:
+# O gráfico em questão, demonstra a quantidade de potência reativa, tanto indutiva
+#(corrente atrasada), quanto Capacitada (corrente adiantada). Além de somar as quantidades
+#totais de potências reativas. Essa vizualização é fundamental por conta do próprio
+#conceito de potência reativa, que é uma parte da potência aparente, que está no sistema,
+#ocupa espaço nesse sistema, porém não produz trabalho, não é utilizado. Tendo esses
+#dados em mãos, o gestor pode tomar a decisão se continuará com o maquinário, ou 
+#trocará por um mais eficiente.
