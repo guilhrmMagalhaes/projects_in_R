@@ -1,0 +1,135 @@
+#Variáveis Jogador:
+carta1Jogador <- 0
+carta2Jogador <- 0
+satisfeito <- 0
+cartaSatisfeito <- 0
+somaJogador <- 0
+
+#Variáveis Crupiê:
+carta1Crupie <- 0
+carta2Crupie <- 0
+cartaSatisfeitoCrupie <-0
+somaCrupie <- 0
+
+#Variável do jogo
+inicio <- as.numeric(readline("Vamos Jogar Vinte Um? Digite 1 para começar, ou 0 para desistir: "))
+
+while ((inicio != 1)&&(inicio != 0)) {
+  inicio <- as.numeric(readline("Vamos Jogar Vinte Um? Digite 1 para começar,ou 0 para desistir: "))
+} 
+if (inicio == 0) {
+  cat("Obrigado por usar esse jogo")
+}
+
+#Início do jogo
+
+if (inicio == 1) {
+  carta1Jogador <- sample.int(13,1)
+  carta2Jogador <- sample.int(13,1)
+  carta1Crupie <- sample.int(13,1)
+  carta2Crupie <- sample.int(13,1)
+
+cat("Uma das cartas do crupiê é ",carta1Crupie,"e as suas duas cartas são ",carta1Jogador,"e",carta2Jogador,"\n")
+
+#Arrumando o valor das cartas do jogador, se necessário e somando a mão do jogador
+
+if (carta1Jogador > 9) {
+  carta1Jogador <- 10
+}
+if (carta2Jogador > 9) {
+  carta2Jogador <- 10
+}
+somaJogador <- carta1Jogador + carta2Jogador
+cat("A soma de sua mão é: ",somaJogador,"\n")
+
+#Perguntando se o jogador quer +1 carta e verificando se sua mão continua menor que 21
+
+satisfeito <- as.numeric(readline("Digite 0 se já está satisfeito com a sua mão, 1 se desejar mais uma carta: "))
+
+while ((satisfeito != 0)&&(satisfeito != 1)) {
+  satisfeito <- as.integer(readline("Digite 0 se já está satisfeito com a sua mão, 1 se desejar mais uma carta: "))
+}
+while ((somaJogador < 21)&&(satisfeito == 1)) {
+  if (satisfeito == 1) {
+    cartaSatisfeito <- sample.int(13,1)
+    
+#Arrumando a cartaSatisfeito, caso necessário e incluindo seu valor na soma do Jogador
+        
+        if (cartaSatisfeito > 9) {
+      cartaSatisfeito <- 10
+    }
+    cat("Sua nova carta sorteada é ",cartaSatisfeito,"\n")
+    somaJogador <- somaJogador + cartaSatisfeito
+    cat("A soma de sua mão é: ",somaJogador,"\n")
+    
+#Perguntando se o jogador está satisfeito, caso sim, verificando se ganhou,
+#caso não, repetindo o processo.
+    
+    if (somaJogador < 21) {
+    satisfeito <- as.numeric(readline("Digite 0 se já está satisfeito com a sua mão, 1 se desejar mais uma carta: "))
+      while ((satisfeito != 0)&&(satisfeito != 1)) {
+      satisfeito <- as.integer(readline("Digite 0 se já está satisfeito com a sua mão, 1 se desejar mais uma carta: "))
+      }
+    }
+  } 
+}
+
+#Verificação se o jogador estourou ou fez 21, caso tenha parado em um valor menor 
+#que 21, o crupiê joga.
+
+if (somaJogador > 21) {
+  cat("BUMMMM, sua mão soma", somaJogador,", você perdeu!!")
+}
+else if (somaJogador == 21) {
+  cat("Vinte um!!! Você ganhou!!!")
+}
+else if (somaJogador < 21){
+  cat("As cartas do crupiê são: ",carta1Crupie,"e",carta2Crupie,"\n")
+  
+#Arrumando os valores das cartas do Crupiê, se necessário e somando a mão do crupiê
+  
+  if (carta1Crupie > 9) {
+    carta1Crupie <- 10
+  }
+  if (carta2Crupie > 9) {
+    carta2Crupie <- 10
+  }
+  somaCrupie <- carta1Crupie + carta2Crupie
+  
+#Comparando a mão do Jogador e do Crupiê
+  
+  if (somaCrupie > somaJogador) {
+    cat("Que pena, você perdeu, pois minha mão é maior que a sua!")
+  }else if (somaCrupie < somaJogador){
+
+#Optei pela estratégia de pedir uma nova carta, caso a soma do crupiê seja menor que 17    
+    
+    while ((somaCrupie < 17)&&(somaCrupie < somaJogador)) {
+      cat("O crupiê pegará uma nova carta\n")
+      cartaSatisfeitoCrupie <- sample.int(13,1)
+      
+#Arrumando o valor da carta do Crupiê, se necessário
+      
+      if (cartaSatisfeitoCrupie > 9) {
+          cartaSatisfeitoCrupie <- 10
+      }
+      somaCrupie <- somaCrupie + cartaSatisfeitoCrupie
+      cat("A nova carta do crupiê é: ",cartaSatisfeitoCrupie,"\n")
+    }
+  }
+  
+#Após a jogada o Crupiê, analisei quem ganhou
+  
+  if ((somaCrupie > somaJogador)&&(somaCrupie <= 21)&&(cartaSatisfeitoCrupie != 0)) {
+    cat("O crupiê está satisfeito com sua mão e você perdeu pois a soma das cartas dele é igual a ", somaCrupie)
+  }else if ((somaCrupie == somaJogador)&&(somaCrupie < 21)) {
+    cat("O crupiê está satisfeito com a sua mão e nós empatamos, pois a soma delas é igual a ",somaCrupie)
+  }else if (somaCrupie < somaJogador) {
+    cat("BUMMM! Você ganhou, pois a soma das cartas do crupiê é",somaCrupie,"e a sua",somaJogador)
+  }else if (somaCrupie > 21) {
+    cat("BUMMM!!! O crupiê estourou sua mão e você ganhou!!!")
+  }
+  
+}
+
+}
